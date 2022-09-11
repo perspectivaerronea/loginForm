@@ -1,0 +1,22 @@
+<table id="tablaProductosPrueba" class="table table-dark table-striped table-hover table-responsive text-center">
+    <thead>
+        <th>Producto</th>
+        <th>Precio</th>
+        <th>Imagen</th>
+    </thead>
+    <tbody id="cuerpoTablaPrueba">
+        {{#if listaProductosPrueba}}
+            {{#each listaProductosPrueba as |pr|}}
+                {{#> childEntry}}
+                    <tr >
+                        <td width="30%"> {{pr.nombre}}</td>
+                        <td width="25%"> {{pr.precio}}</td>
+                        <td width="45%"><img class="rounded mx-auto d-block" src="{{pr.foto}}" width="500px" height="300px" /></td>                
+                    </tr>
+                {{/childEntry}}
+            {{/each}}
+        {{else}}
+            <td colspan=3>No hay productos de prueba</td>
+        {{/if}}
+    </tbody>
+</table>
