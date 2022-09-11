@@ -17,7 +17,7 @@ import { productos_schema } from "./schemas/productos_schema.js";
 import { mensajes_schema } from "./schemas/mensajes_schema.js";
 
 //COOKIE
-import cookieParser, { signedCookie } from 'cookie-parser';
+// import cookieParser, { signedCookie } from 'cookie-parser';
 
 //SESSION
 import session from 'express-session';
@@ -37,7 +37,6 @@ class MensajeDaoMongo extends ContenedorMongo {
     }
 
 }
-
 class ProductoDaoMongo extends ContenedorMongo {
     constructor() {
         super();
@@ -114,10 +113,9 @@ function normalizarMensajes(mensajesSinNormalizar) {
 }
 
 function autorizacion(req, res, next) {
-    if (req.session.conectado) {
+    if (req.session.conectado) {        
         return next();
-    } else {
-        // res.status(401).send({ 'error': '-1', 'descripcion': `Error de Autorización` });
+    } else {                
         res.status(301).redirect("../api/logout");
     }
 }
@@ -134,19 +132,22 @@ app.use(express.urlencoded({ extended: true }));
 
 //Sesión
 const advanceOptions = { useNewUrlParser: true, useUnifiedTopology: true };
-app.use(session({
+const sesionMongo = session({
     store: MongoStore.create({
         mongoUrl: process.env.MONGOATLAS,
         mongoOptions: advanceOptions
     }),
     dbname: process.env.MONTOATLASBASE,
     secret: process.env.SECRET,
-    resave: false,
+    resave: true,
     saveUninitialized: false,
-    cookie: {
-        maxAge: (1000 * 60)
+    cookie: {        
+        expires: (1000 * 10)
     }
-}));
+});
+
+
+app.use(sesionMongo);
 
 //Configuro el Engine para usar HandleBars
 app.engine('hbs', hbs.engine({
@@ -181,12 +182,8 @@ app.post('/', async (req, res) => {
 })
 
 app.get('/api/logout', (req, res) => {
-    res.render('main', { layout: 'logout', usuario: usuario[usuario.length - 1] });    
+    res.render('main', { layout: 'logout', usuario: usuario[usuario.length - 1] });
 });
-
-
-// El servidor funcionando en el puerto 3000
-httpServerV.listen(process.env.PORT, () => console.log('SERVER ON'));
 
 io.on('connection', (socket) => {
 
@@ -227,3 +224,6 @@ io.on('connection', (socket) => {
     });
 
 })
+
+// El servidor funcionando en el puerto 3000
+httpServerV.listen(process.env.PORT, () => console.log('SERVER ON'));

@@ -105,7 +105,15 @@ function addMessage(e) {
     //El return false previene el funcionamiento del comportamiento por default del submit que hace un refresh de la página, con el 'false' ya se previene esa acción no deseada.
     return false;
 }
+
+function desconectar(data){
+    console.log("logout - client");
+    console.log(data);
+    window.location.href = "../api/logout";
+}
+
 socket.emit('nuevoUsuario');
 socket.on('mensaje', data => { render(data); });
 socket.on('listaProductos', data => { renderTabla(data); });
 socket.on('nuevoUsuario', data => { render(data); });
+socket.on('connect_error',  data => { desconectar(data); });
