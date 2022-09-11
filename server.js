@@ -142,10 +142,13 @@ const sesionMongo = session({
     resave: true,
     saveUninitialized: false,
     cookie: {        
-        expires: (1000 * 10)
-    }
+        expires: (1000 * 60 * 10)
+    }    
 });
 
+/**
+ *  (1000 * 60 * 10) = 60000 milisegundos = 10 minutos 
+ */
 
 app.use(sesionMongo);
 
